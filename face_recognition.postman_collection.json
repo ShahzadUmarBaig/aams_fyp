@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "a7268ed2-4846-4a9c-b966-c6a816c96356",
+		"name": "face_recognition",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11771172"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/asharib/Downloads/PS/profile-pic (5).png"
+						},
+						{
+							"key": "empCode",
+							"value": "12345",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/register",
+					"protocol": "http",
+					"host": [
+						"my-env",
+						"eba-mjj9b6wm",
+						"us-east-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/asharib/Downloads/PS/profile-pic (5).png"
+						},
+						{
+							"key": "empCode",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/verify",
+					"protocol": "http",
+					"host": [
+						"my-env",
+						"eba-mjj9b6wm",
+						"us-east-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"verify"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "link",
+			"value": "http://asharib90.pythonanywhere.com/"
+		},
+		{
+			"key": "linkk",
+			"value": "http://127.0.0.1:5000/"
+		}
+	]
+}
