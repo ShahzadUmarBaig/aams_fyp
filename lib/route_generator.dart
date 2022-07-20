@@ -1,18 +1,18 @@
 import 'package:aams_fyp/views/home_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'views/login_screen.dart';
-import 'views/register_screen.dart';
+import 'views/signin_screen.dart';
+import 'views/signup_screen.dart';
 
 class RouteGenerator {
   static Route generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case LoginScreen.id:
-        return MaterialPageRoute(builder: (context) => LoginScreen());
+      case SignInScreen.id:
+        return MaterialPageRoute(builder: (context) => SignInScreen());
       case HomeScreen.id:
         return MaterialPageRoute(builder: (context) => HomeScreen());
-      case RegisterScreen.id:
-        return MaterialPageRoute(builder: (context) => RegisterScreen());
+      case SignUpScreen.id:
+        return MaterialPageRoute(builder: (context) => SignUpScreen());
 
       default:
         return MaterialPageRoute(builder: (context) => _errorRoute());

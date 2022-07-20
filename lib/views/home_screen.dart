@@ -1,11 +1,390 @@
+import 'package:aams_fyp/main.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/custom_date_picker.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String id = "/home";
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Container());
+    return Scaffold(
+        key: _scaffoldKey,
+        drawer: DrawerWidget(),
+        body: SafeArea(
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  AppBarWidget(scaffoldKey: _scaffoldKey),
+                  TableComplexExample(
+                    () {},
+                    kLastDay: DateTime.now(),
+                    kFirstDay: DateTime.now(),
+                  ),
+                  Container(
+                    height: 80,
+                    margin: EdgeInsets.symmetric(horizontal: 18),
+                    padding: EdgeInsets.symmetric(horizontal: 18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Total Working Days",
+                          style: TextStyle(fontFamily: 'poppins', fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Color(0xff6C5DDC),
+                          ),
+                          child: Text(
+                            "24",
+                            style: TextStyle(
+                              fontFamily: 'poppins',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomContainer(title: 'Total Absent', text: '03', colorValue: 0xffE94D90),
+                      SizedBox(width: 24),
+                      CustomContainer(title: 'Total Present', text: '21', colorValue: 0xff21D1FF),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Color(0xff6150D1),
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Color(0xff6150D1)),
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 32, horizontal: 21),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 65,
+                    height: 65,
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                    child: Icon(
+                      Icons.person,
+                      color: Color(0xff6150D1),
+                      size: 42,
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 8),
+                      Text(
+                        "Tom Cooper",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'poppins',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "View profile",
+                        style: TextStyle(
+                          fontFamily: 'poppins',
+                          color: Colors.white.withOpacity(0.5),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 34),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  child: const Text(
+                    'Dashboard',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Calendar',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Student Portal',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Forms',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Contact',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Notification',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CustomContainer extends StatelessWidget {
+  const CustomContainer({
+    Key? key,
+    required this.title,
+    required this.text,
+    required this.colorValue,
+  }) : super(key: key);
+  final String title;
+  final String text;
+  final int colorValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 167,
+      height: 202,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        color: Color(colorValue),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 14,
+            left: 12,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontFamily: 'poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -24,
+            right: 15,
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 92,
+                color: Colors.white,
+                fontFamily: 'poppins',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AppBarWidget extends StatelessWidget {
+  const AppBarWidget({
+    Key? key,
+    required this.scaffoldKey,
+  }) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: 92,
+            decoration: BoxDecoration(
+              color: Color(0xff6C5DDC),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(22),
+                bottomRight: Radius.circular(22),
+              ),
+            ),
+            child: Row(
+              children: [
+                MaterialButton(
+                  onPressed: () {
+                    scaffoldKey.currentState!.openDrawer();
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(42),
+                  ),
+                  minWidth: 0,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  "Attendance",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'poppins',
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 2,
+            left: 14,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.92,
+              height: 52,
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(32),
+                  boxShadow: [BoxShadow(blurRadius: 0.2, color: Colors.black12)]),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xff5E4CCD),
+                  ),
+                  const SizedBox(
+                    width: 5.0,
+                  ),
+                  Spacer(),
+                  Text(
+                    'July, 2022',
+                    style: const TextStyle(
+                        color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xff5E4CCD),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

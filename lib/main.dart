@@ -1,5 +1,6 @@
 import 'package:aams_fyp/route_generator.dart';
-import 'package:aams_fyp/views/login_screen.dart';
+import 'package:aams_fyp/views/home_screen.dart';
+import 'package:aams_fyp/views/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: LoginScreen(),
+      home: HomeScreen(),
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
