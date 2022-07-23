@@ -1,125 +1,158 @@
+import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aams_fyp/views/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../blocs/auth_bloc/auth_bloc.dart';
 import '../constants.dart';
 
 class SignInScreen extends StatelessWidget {
   static const String id = "/sign-in";
   SignInScreen({Key? key}) : super(key: key);
 
+  // form key
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: ListView(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 72),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Color(0xff3262B7), width: 3),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (authContext, authState) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: ListView(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 72),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Color(0xff3262B7), width: 3),
+                    ),
+                    child: Image.asset(
+                      'assets/images/applogo.png',
+                      width: 220,
+                      height: 220,
+                    ),
                   ),
-                  child: Image.asset(
-                    'assets/images/applogo.png',
-                    width: 220,
-                    height: 220,
+                  SizedBox(height: 21),
+                  Text(
+                    'Automated Attendance',
+                    style: TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff3262B7),
+                    ),
                   ),
-                ),
-                SizedBox(height: 21),
-                Text(
-                  'Automated Attendance',
-                  style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff3262B7),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 18),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 21),
-                      TextFormField(
-                        onChanged: (email) {},
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: Constants.textFieldDecoration.copyWith(
-                          prefixIcon: Icon(
-                            Icons.alternate_email,
-                            color: Colors.black.withOpacity(0.4),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 24),
-                      TextFormField(
-                        onChanged: (password) {},
-                        obscureText: true,
-                        decoration: Constants.textFieldDecoration.copyWith(
-                          hintText: 'Type your password',
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            color: Colors.black.withOpacity(0.4),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 24),
-                      MaterialButton(
-                        onPressed: () {},
-                        color: Constants.buttonColor,
-                        minWidth: double.infinity,
-                        height: 45,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Login',
-                          style: Constants.buttonTextStyle,
-                        ),
-                      ),
-                      SizedBox(height: 24),
-                      Row(
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 18),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "New to App? ",
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.2),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          MaterialButton(
-                            onPressed: () => Navigator.pushReplacementNamed(
-                              context,
-                              SignUpScreen.id,
-                            ),
-                            minWidth: 62,
-                            padding: EdgeInsets.all(0),
-                            visualDensity: VisualDensity.compact,
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            child: Text(
-                              'Register',
-                              style: TextStyle(
-                                color: Constants.buttonColor,
-                                fontWeight: FontWeight.bold,
+                          SizedBox(height: 21),
+                          TextFormField(
+                            onChanged: (email) {
+                              authContext
+                                  .read<AuthBloc>()
+                                  .add(OnEmailChanged(email));
+                            },
+                            validator: (email) {
+                              if (!authState.isEmailValid) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: Constants.textFieldDecoration.copyWith(
+                              prefixIcon: Icon(
+                                Icons.alternate_email,
+                                color: Colors.black.withOpacity(0.4),
                               ),
                             ),
                           ),
+                          SizedBox(height: 24),
+                          TextFormField(
+                            onChanged: (password) {
+                              authContext
+                                  .read<AuthBloc>()
+                                  .add(OnPasswordChanged(password));
+                            },
+                            validator: (password) {
+                              if (!authState.isPasswordValid) {
+                                return 'Password is required';
+                              }
+                              return null;
+                            },
+                            obscureText: true,
+                            decoration: Constants.textFieldDecoration.copyWith(
+                              hintText: 'Type your password',
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Colors.black.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 24),
+                          MaterialButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                authContext.read<AuthBloc>().add(OnSignIn());
+                              }
+                            },
+                            color: Constants.buttonColor,
+                            minWidth: double.infinity,
+                            height: 45,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Text(
+                              'Login',
+                              style: Constants.buttonTextStyle,
+                            ),
+                          ),
+                          SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "New to App? ",
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.2),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              MaterialButton(
+                                onPressed: () => Navigator.pushReplacementNamed(
+                                  context,
+                                  SignUpScreen.id,
+                                ),
+                                minWidth: 62,
+                                padding: EdgeInsets.all(0),
+                                visualDensity: VisualDensity.compact,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                child: Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    color: Constants.buttonColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ));
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -186,14 +219,5 @@ class ProfilePictureWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future getImage(BuildContext context) async {
-    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      // context
-      //     .read<ProfileCompletionBloc>()
-      //     .add(OnFileChanged(File(image.path)));
-    }
   }
 }

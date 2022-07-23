@@ -11,14 +11,28 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.5
+  cached_network_image: ^3.2.1
+  dio: ^4.0.6
   flutter_bloc: ^8.0.1
   freezed_annotation: ^2.0.3
   freezed: ^2.0.5
   bloc: ^8.0.3
   http: ^0.13.4
-  image_picker: ^0.8.5+3
+  image_picker: ^0.7.5
   intl: ^0.17.0
+  shared_preferences: ^2.0.15
+  shimmer: ^2.0.0
   table_calendar: ^3.0.6
+
+  # Firebase Dependencies
+  cloud_firestore: ^3.4.0
+  firebase_core: ^1.20.0
+  firebase_auth: ^3.5.0
+
+
+
+
+
 
 dev_dependencies:
   flutter_test:

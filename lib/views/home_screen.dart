@@ -1,5 +1,8 @@
 import 'package:aams_fyp/main.dart';
+import 'package:aams_fyp/views/signin_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/custom_date_picker.dart';
 
@@ -11,74 +14,82 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        drawer: DrawerWidget(),
-        body: SafeArea(
-          child: ListView(
-            children: [
-              Column(
-                children: [
-                  AppBarWidget(scaffoldKey: _scaffoldKey),
-                  TableComplexExample(
-                    () {},
-                    kLastDay: DateTime.now(),
-                    kFirstDay: DateTime.now(),
+      key: _scaffoldKey,
+      drawer: DrawerWidget(),
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Column(
+              children: [
+                AppBarWidget(scaffoldKey: _scaffoldKey),
+                TableComplexExample(
+                  () {},
+                  kLastDay: DateTime.now(),
+                  kFirstDay: DateTime.now(),
+                ),
+                Container(
+                  height: 80,
+                  margin: EdgeInsets.symmetric(horizontal: 18),
+                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  Container(
-                    height: 80,
-                    margin: EdgeInsets.symmetric(horizontal: 18),
-                    padding: EdgeInsets.symmetric(horizontal: 18),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Total Working Days",
-                          style: TextStyle(fontFamily: 'poppins', fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
-                        Spacer(),
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xff6C5DDC),
-                          ),
-                          child: Text(
-                            "24",
-                            style: TextStyle(
-                              fontFamily: 'poppins',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
                     children: [
-                      CustomContainer(title: 'Total Absent', text: '03', colorValue: 0xffE94D90),
-                      SizedBox(width: 24),
-                      CustomContainer(title: 'Total Present', text: '21', colorValue: 0xff21D1FF),
+                      Text(
+                        "Total Working Days",
+                        style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Color(0xff6C5DDC),
+                        ),
+                        child: Text(
+                          "24",
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                ],
-              ),
-            ],
-          ),
-        ));
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomContainer(
+                        title: 'Total Absent',
+                        text: '03',
+                        colorValue: 0xffE94D90),
+                    SizedBox(width: 24),
+                    CustomContainer(
+                        title: 'Total Present',
+                        text: '21',
+                        colorValue: 0xff21D1FF),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({
-    Key? key,
-  }) : super(key: key);
+  const DrawerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +107,8 @@ class DrawerWidget extends StatelessWidget {
                   Container(
                     width: 65,
                     height: 65,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
                     child: Icon(
                       Icons.person,
                       color: Color(0xff6150D1),
@@ -138,7 +150,7 @@ class DrawerWidget extends StatelessWidget {
               children: [
                 TextButton(
                   child: const Text(
-                    'Dashboard',
+                    'Classes',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'poppins',
@@ -152,63 +164,7 @@ class DrawerWidget extends StatelessWidget {
                 ),
                 TextButton(
                   child: const Text(
-                    'Calendar',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Student Portal',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Forms',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Contact',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Notification',
+                    'Courses',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'poppins',
@@ -230,8 +186,9 @@ class DrawerWidget extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacementNamed(context, SignInScreen.id);
                   },
                 ),
               ],
@@ -298,11 +255,16 @@ class CustomContainer extends StatelessWidget {
 }
 
 class AppBarWidget extends StatelessWidget {
-  const AppBarWidget({
-    Key? key,
-    required this.scaffoldKey,
-  }) : super(key: key);
+  const AppBarWidget({Key? key, required this.scaffoldKey}) : super(key: key);
   final GlobalKey<ScaffoldState> scaffoldKey;
+
+  String getMonthName(DateTime date) {
+    var month = date.month;
+    var year = date.year;
+    var monthName = DateFormat.MMMM().format(DateTime(year, month));
+    return '$monthName, $year';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -334,7 +296,8 @@ class AppBarWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                Spacer(),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.21),
+                // Spacer(),
                 Text(
                   "Attendance",
                   style: TextStyle(
@@ -358,27 +321,25 @@ class AppBarWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(32),
-                  boxShadow: [BoxShadow(blurRadius: 0.2, color: Colors.black12)]),
+                  boxShadow: [
+                    BoxShadow(blurRadius: 0.2, color: Colors.black12)
+                  ]),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.arrow_back_ios,
-                    color: Color(0xff5E4CCD),
-                  ),
-                  const SizedBox(
-                    width: 5.0,
-                  ),
                   Spacer(),
                   Text(
-                    'July, 2022',
+                    "${getMonthName(DateTime.now())}",
                     style: const TextStyle(
-                        color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins'),
                   ),
                   Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Color(0xff5E4CCD),
-                  ),
+                  // Icon(
+                  //   Icons.arrow_forward_ios,
+                  //   color: Color(0xff5E4CCD),
+                  // ),
                 ],
               ),
             ),

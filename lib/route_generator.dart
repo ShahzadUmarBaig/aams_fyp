@@ -13,7 +13,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => HomeScreen());
       case SignUpScreen.id:
         return MaterialPageRoute(builder: (context) => SignUpScreen());
-
       default:
         return MaterialPageRoute(builder: (context) => _errorRoute());
     }
