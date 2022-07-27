@@ -35,3 +35,10 @@ class OnUserChanged extends AuthEvent {
   final User? user;
   OnUserChanged(this.user);
 }
+
+class OnApiChanged extends AuthEvent {}
+
+class OnStudentNameChanged extends AuthEvent {
+  final String studentName;
+  OnStudentNameChanged(this.studentName);
+}

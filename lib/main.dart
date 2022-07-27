@@ -32,9 +32,7 @@ class App extends StatelessWidget {
             return MaterialApp(
               debugShowCheckedModeBanner: true,
               title: 'Efficient Attendance System',
-              home: FirebaseAuth.instance.currentUser == null
-                  ? SignInScreen()
-                  : HomeScreen(),
+              home: SignInScreen(),
               onGenerateRoute: RouteGenerator.generateRoute,
             );
           }

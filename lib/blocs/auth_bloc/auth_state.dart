@@ -8,21 +8,26 @@ class AuthState {
     required this.email,
     required this.password,
     required this.studentId,
+    required this.studentName,
     required this.isLoading,
     required this.user,
+    required this.apiException,
   });
 
   final PickedFile? file;
   final String email;
   final String password;
   final String studentId;
+  final String studentName;
   final bool isLoading;
   final User? user;
+  final ApiException apiException;
 
   bool get isValid {
     return email.isNotEmpty &&
         password.isNotEmpty &&
         studentId.isNotEmpty &&
+        studentName.isNotEmpty &&
         file != null;
   }
 
@@ -31,8 +36,10 @@ class AuthState {
         email: "",
         password: "",
         studentId: "",
+        studentName: "",
         isLoading: false,
         user: null,
+        apiException: ApiException(""),
       );
 
   bool get isStudentIdValid {
@@ -51,20 +58,49 @@ class AuthState {
   }
 
   AuthState copyWith({
-    PickedFile? file,
     String? email,
     String? password,
     String? studentId,
+    String? studentName,
     bool? isLoading,
     User? user,
+    ApiException? apiException,
   }) {
     return AuthState(
       file: file,
       email: email ?? this.email,
       password: password ?? this.password,
       studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
       isLoading: isLoading ?? this.isLoading,
       user: user ?? this.user,
+      apiException: apiException ?? this.apiException,
+    );
+  }
+
+  AuthState copyWithUser({User? user}) {
+    return AuthState(
+      user: user,
+      file: file,
+      email: email,
+      password: password,
+      studentId: studentId,
+      studentName: studentName,
+      isLoading: isLoading,
+      apiException: apiException,
+    );
+  }
+
+  AuthState copyWithImage({PickedFile? file}) {
+    return AuthState(
+      file: file,
+      email: email,
+      password: password,
+      studentId: studentId,
+      studentName: studentName,
+      isLoading: isLoading,
+      user: user,
+      apiException: apiException,
     );
   }
 }

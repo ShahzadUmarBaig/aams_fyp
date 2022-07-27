@@ -1,7 +1,11 @@
-import 'package:aams_fyp/main.dart';
+import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
+
+import 'package:aams_fyp/views/all_courses_screen.dart';
 import 'package:aams_fyp/views/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/custom_date_picker.dart';
@@ -9,81 +13,85 @@ import '../widgets/custom_date_picker.dart';
 class HomeScreen extends StatelessWidget {
   static const String id = "/home";
   HomeScreen({Key? key}) : super(key: key);
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: DrawerWidget(),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            Column(
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Scaffold(
+          key: _scaffoldKey,
+          drawer: DrawerWidget(),
+          body: SafeArea(
+            child: ListView(
               children: [
-                AppBarWidget(scaffoldKey: _scaffoldKey),
-                TableComplexExample(
-                  () {},
-                  kLastDay: DateTime.now(),
-                  kFirstDay: DateTime.now(),
-                ),
-                Container(
-                  height: 80,
-                  margin: EdgeInsets.symmetric(horizontal: 18),
-                  padding: EdgeInsets.symmetric(horizontal: 18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Total Working Days",
-                        style: TextStyle(
-                            fontFamily: 'poppins',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                      Spacer(),
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Color(0xff6C5DDC),
-                        ),
-                        child: Text(
-                          "24",
-                          style: TextStyle(
-                            fontFamily: 'poppins',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    CustomContainer(
-                        title: 'Total Absent',
-                        text: '03',
-                        colorValue: 0xffE94D90),
-                    SizedBox(width: 24),
-                    CustomContainer(
-                        title: 'Total Present',
-                        text: '21',
-                        colorValue: 0xff21D1FF),
+                    AppBarWidget(scaffoldKey: _scaffoldKey),
+                    TableComplexExample(
+                      () {},
+                      kLastDay: DateTime.now(),
+                      kFirstDay: DateTime.now(),
+                    ),
+                    Container(
+                      height: 80,
+                      margin: EdgeInsets.symmetric(horizontal: 18),
+                      padding: EdgeInsets.symmetric(horizontal: 18),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Total Working Days",
+                            style: TextStyle(
+                                fontFamily: 'poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Color(0xff6C5DDC),
+                            ),
+                            child: Text(
+                              "24",
+                              style: TextStyle(
+                                fontFamily: 'poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomContainer(
+                            title: 'Total Classes',
+                            text: state.classes.iter.length.toString(),
+                            colorValue: 0xffE94D90),
+                        SizedBox(width: 24),
+                        CustomContainer(
+                            title: 'Total Present',
+                            text: '21',
+                            colorValue: 0xff21D1FF),
+                      ],
+                    ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -93,109 +101,119 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Color(0xff6150D1),
-      child: ListView(
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xff6150D1)),
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 32, horizontal: 21),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 65,
-                    height: 65,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                    child: Icon(
-                      Icons.person,
-                      color: Color(0xff6150D1),
-                      size: 42,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Column(
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return Drawer(
+          backgroundColor: Color(0xff6150D1),
+          child: ListView(
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Color(0xff6150D1)),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 32, horizontal: 21),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 8),
-                      Text(
-                        "Tom Cooper",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'poppins',
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
+                        child: Icon(
+                          Icons.person,
+                          color: Color(0xff6150D1),
+                          size: 42,
                         ),
                       ),
-                      Text(
-                        "View profile",
+                      SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 8),
+                          Text(
+                            "Tom Cooper",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'poppins',
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "View profile",
+                            style: TextStyle(
+                              fontFamily: 'poppins',
+                              color: Colors.white.withOpacity(0.5),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 34),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      child: const Text(
+                        'Classes',
                         style: TextStyle(
+                          fontSize: 16,
                           fontFamily: 'poppins',
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    TextButton(
+                      child: const Text(
+                        'Courses',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'poppins',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          AllCourseScreen.id,
+                          arguments: context.read<HomeBloc>(),
+                        );
+                      },
+                    ),
+                    TextButton(
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'poppins',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        context.read<AuthBloc>().add(OnUserChanged(null));
+                        Navigator.pushReplacementNamed(
+                            context, SignInScreen.id);
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 34),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton(
-                  child: const Text(
-                    'Classes',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Courses',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins',
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacementNamed(context, SignInScreen.id);
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -213,43 +231,47 @@ class CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 167,
-      height: 202,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
-        color: Color(colorValue),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 14,
-            left: 12,
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontFamily: 'poppins',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Container(
+          width: 167,
+          height: 202,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            color: Color(colorValue),
           ),
-          Positioned(
-            bottom: -24,
-            right: 15,
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 92,
-                color: Colors.white,
-                fontFamily: 'poppins',
-                fontWeight: FontWeight.w600,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 14,
+                left: 12,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontFamily: 'poppins',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                bottom: -24,
+                right: 15,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 92,
+                    color: Colors.white,
+                    fontFamily: 'poppins',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

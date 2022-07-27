@@ -24,8 +24,15 @@ class SignUpScreen extends StatelessWidget {
         if (authState.user != null) {
           Navigator.pushReplacementNamed(context, HomeScreen.id);
         }
+        if (authState.apiException.message.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(authState.apiException.message),
+          ));
+          authContext.read<AuthBloc>().add(OnApiChanged());
+        }
       },
       builder: (authContext, authState) {
+        print(authState.user);
         return Scaffold(
           backgroundColor: Colors.white,
           body: ListView(
@@ -125,10 +132,32 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24),
                           TextFormField(
+                            keyboardType: TextInputType.text,
+                            validator: (value) {
+                              if (authState.studentName.isEmpty) {
+                                return "Student Name is empty";
+                              }
+                              return null;
+                            },
+                            decoration: Constants.textFieldDecoration.copyWith(
+                              hintText: "Enter your Student Name",
+                              prefixIcon: Icon(
+                                Icons.alternate_email,
+                                color: Colors.black.withOpacity(0.4),
+                              ),
+                            ),
+                            onChanged: (studentName) {
+                              context
+                                  .read<AuthBloc>()
+                                  .add(OnStudentNameChanged(studentName));
+                            },
+                          ),
+                          SizedBox(height: 24),
+                          TextFormField(
                             obscureText: true,
                             validator: (value) {
                               if (!authState.isPasswordValid) {
-                                return "Password is not valid";
+                                return "Password must be alphanumeric";
                               }
                               return null;
                             },
@@ -170,26 +199,31 @@ class SignUpScreen extends StatelessWidget {
                                 ),
                               ])),
                           SizedBox(height: 24),
-                          MaterialButton(
-                            onPressed: authState.isValid
-                                ? () {
-                                    if (_formKey.currentState!.validate()) {
-                                      context.read<AuthBloc>().add(OnSignUp());
-                                    }
-                                  }
-                                : null,
-                            disabledColor: Colors.grey.shade400,
-                            color: Constants.buttonColor,
-                            minWidth: double.infinity,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            height: 48,
-                            child: Text(
-                              'Continue',
-                              style: Constants.buttonTextStyle,
-                            ),
-                          ),
+                          authState.isLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : MaterialButton(
+                                  onPressed: authState.isValid
+                                      ? () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            context
+                                                .read<AuthBloc>()
+                                                .add(OnSignUp());
+                                          }
+                                        }
+                                      : null,
+                                  disabledColor: Colors.grey.shade400,
+                                  color: Constants.buttonColor,
+                                  minWidth: double.infinity,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  height: 48,
+                                  child: Text(
+                                    'Continue',
+                                    style: Constants.buttonTextStyle,
+                                  ),
+                                ),
                           SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

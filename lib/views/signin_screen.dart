@@ -1,4 +1,5 @@
 import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aams_fyp/views/home_screen.dart';
 import 'package:aams_fyp/views/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,16 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (authContext, authState) {
+        if (authState.user != null) {
+          Navigator.pushReplacementNamed(
+            context,
+            HomeScreen.id,
+            arguments: context.read<AuthBloc>(),
+          );
+        }
+      },
       builder: (authContext, authState) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -95,22 +105,26 @@ class SignInScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 24),
-                          MaterialButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                authContext.read<AuthBloc>().add(OnSignIn());
-                              }
-                            },
-                            color: Constants.buttonColor,
-                            minWidth: double.infinity,
-                            height: 45,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Text(
-                              'Login',
-                              style: Constants.buttonTextStyle,
-                            ),
-                          ),
+                          authState.isLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : MaterialButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      authContext
+                                          .read<AuthBloc>()
+                                          .add(OnSignIn());
+                                    }
+                                  },
+                                  color: Constants.buttonColor,
+                                  minWidth: double.infinity,
+                                  height: 45,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    'Login',
+                                    style: Constants.buttonTextStyle,
+                                  ),
+                                ),
                           SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -23,9 +23,14 @@ class ApiService {
       http.StreamedResponse response = await request.send();
       String rawResponse = await response.stream.bytesToString();
       Map decodedResponse = json.decode(rawResponse);
+      print(response.statusCode);
+      print(response.reasonPhrase);
+      print(decodedResponse);
+      print(rawResponse);
       if (response.statusCode == 200) {
         return decodedResponse['response'];
       } else {
+        print("Coming here");
         throw ApiException(decodedResponse['error']);
       }
     } catch (e) {
@@ -58,8 +63,8 @@ class ApiService {
       UserCredential result = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       return result.user;
-    } catch (e) {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw ApiException(e.code);
     }
   }
 
