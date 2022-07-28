@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -7,19 +8,23 @@ class ApiService {
   final String faceRegisterMessage = "Face successfully registered";
 
   Future<String> registerUser(String studentID, String filePath) async {
-    print(studentID);
-    print(filePath);
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/register'));
-    request.fields.addAll({'empCode': '$studentID'});
-    request.files.add(await http.MultipartFile.fromPath('image', filePath));
-    request.headers.addAll({
-      'Content-Type': 'multipart/form-data',
-      'Accept': 'application/json',
-    });
     try {
+      File file = File(filePath);
+      double fileSize = file.lengthSync() / 1024 / 1024;
+      if (fileSize > 2) {
+        throw ApiException("File size must be smaller than 2MB");
+      }
+
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/register'));
+      request.fields.addAll({'empCode': '$studentID'});
+      request.files.add(await http.MultipartFile.fromPath('image', filePath));
+      request.headers.addAll({
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'application/json',
+      });
       http.StreamedResponse response = await request.send();
       String rawResponse = await response.stream.bytesToString();
       Map decodedResponse = json.decode(rawResponse);
@@ -39,22 +44,35 @@ class ApiService {
   }
 
   Future<String> verifyUser(String studentId, String filePath) async {
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/verify'));
-    request.fields.addAll({'empCode': '$studentId'});
-    request.files.add(await http.MultipartFile.fromPath('image', '$filePath'));
     try {
+      File file = File(filePath);
+      double fileSize = file.lengthSync() / 1024 / 1024;
+      if (fileSize > 2) {
+        throw ApiException("File size must be smaller than 2MB");
+      }
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/verify'));
+      request.fields.addAll({'empCode': '$studentId'});
+      request.files
+          .add(await http.MultipartFile.fromPath('image', '$filePath'));
+
       http.StreamedResponse response = await request.send();
+      String rawResponse = await response.stream.bytesToString();
+      Map decodedResponse = json.decode(rawResponse);
+      print(response.statusCode);
+      print(response.reasonPhrase);
+      print(decodedResponse);
+      print(rawResponse);
       if (response.statusCode == 200) {
-        String message = await response.stream.bytesToString();
-        return message;
+        return decodedResponse['response'];
       } else {
-        throw ApiException("Verification Failed");
+        print("Coming here");
+        throw ApiException(decodedResponse['error']);
       }
     } catch (e) {
-      throw ApiException(e.toString());
+      rethrow;
     }
   }
 

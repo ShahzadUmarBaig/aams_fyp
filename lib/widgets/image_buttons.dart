@@ -17,3 +17,23 @@ class ImageButton extends StatelessWidget {
     );
   }
 }
+
+class ImageButtonTwo extends StatelessWidget {
+  final IconData icon;
+  final Function() onPressed;
+
+  const ImageButtonTwo({Key? key, required this.icon, required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      height: 24,
+      shape: CircleBorder(),
+      color: Colors.white,
+      elevation: 5,
+      child: Icon(icon, color: Colors.red, size: 16),
+      onPressed: onPressed,
+    );
+  }
+}

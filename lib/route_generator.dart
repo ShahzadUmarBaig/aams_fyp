@@ -1,6 +1,8 @@
 import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
+import 'package:aams_fyp/views/add_class_screen.dart';
 import 'package:aams_fyp/views/add_course_screen.dart';
+import 'package:aams_fyp/views/all_classes_screen.dart';
 import 'package:aams_fyp/views/all_courses_screen.dart';
 import 'package:aams_fyp/views/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,15 @@ class RouteGenerator {
             child: AllCourseScreen(),
           ),
         );
+      case AllClassesScreen.id:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider<HomeBloc>.value(
+            value: settings.arguments as HomeBloc,
+            child: AllClassesScreen(),
+          ),
+        );
+      case AddClassScreen.id:
+        return MaterialPageRoute(builder: (context) => AddClassScreen());
 
       case AddCourseScreen.id:
         return MaterialPageRoute(builder: (context) => AddCourseScreen());

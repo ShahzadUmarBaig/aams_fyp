@@ -22,7 +22,8 @@ class SignUpScreen extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (authContext, authState) {
         if (authState.user != null) {
-          Navigator.pushReplacementNamed(context, HomeScreen.id);
+          Navigator.pushReplacementNamed(context, HomeScreen.id,
+              arguments: context.read<AuthBloc>());
         }
         if (authState.apiException.message.isNotEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -1,3 +1,4 @@
+import 'package:aams_fyp/models/attendance.dart';
 import 'package:aams_fyp/models/class.dart';
 import 'package:aams_fyp/models/course.dart';
 import 'package:aams_fyp/models/user.dart' as u;
@@ -24,7 +25,10 @@ class FirebaseService {
       uid: user.uid,
     );
 
-    await FirebaseFirestore.instance.collection("users").add(localUser.toMap());
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .set(localUser.toMap());
   }
 
   Stream<List<Course>> getAllCourses() {
@@ -37,10 +41,11 @@ class FirebaseService {
         (event) => event.docs.map((e) => Class.fromMap(e.data())).toList());
   }
 
-  Future addCourse(
-      {required String courseName,
-      required String courseInstructor,
-      required String courseClasses}) async {
+  Future addCourse({
+    required String courseName,
+    required String courseInstructor,
+    required String courseClasses,
+  }) async {
     Course course = Course(
       courseName: courseName,
       courseInstructor: courseInstructor,
@@ -53,15 +58,52 @@ class FirebaseService {
   // create class function
   Future addClass({
     required String className,
-    required DateTime classTime,
+    required DateTime startTime,
+    required DateTime endTime,
+    required Duration duration,
   }) async {
     Class classObject = Class(
       className: className,
-      classTime: classTime,
+      startTime: startTime,
+      endTime: endTime,
+      duration: duration,
     );
 
     await FirebaseFirestore.instance
         .collection("classes")
         .add(classObject.toMap());
+  }
+
+  // create stream that gets all attendance where uid is user.uid
+  Stream<List<Attendance>> getAllAttendance() {
+    return FirebaseFirestore.instance
+        .collection("attendance")
+        .where("uid", isEqualTo: user.uid)
+        .snapshots()
+        .map((event) =>
+            event.docs.map((e) => Attendance.fromMap(e.data())).toList());
+  }
+
+  // create attendance based on class object
+  Future addAttendance({
+    required Class classObject,
+  }) async {
+    await FirebaseFirestore.instance.collection("attendance").add({
+      "uid": user.uid,
+      "classData": classObject.toMap(),
+    });
+  }
+
+  //write user stream function
+  Stream<u.User> userStream() {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .snapshots()
+        .map(
+          (event) => u.User.fromMap(
+            event.data()!,
+          ),
+        );
   }
 }

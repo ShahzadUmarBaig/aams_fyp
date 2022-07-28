@@ -1,5 +1,6 @@
 import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
+import 'package:aams_fyp/views/all_classes_screen.dart';
 
 import 'package:aams_fyp/views/all_courses_screen.dart';
 import 'package:aams_fyp/views/signin_screen.dart';
@@ -81,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(width: 24),
                         CustomContainer(
                             title: 'Total Present',
-                            text: '21',
+                            text: state.attendances.iter.length.toString(),
                             colorValue: 0xff21D1FF),
                       ],
                     ),
@@ -101,7 +102,7 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Drawer(
           backgroundColor: Color(0xff6150D1),
@@ -128,23 +129,17 @@ class DrawerWidget extends StatelessWidget {
                       SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 8),
                           Text(
-                            "Tom Cooper",
+                            state.user != null
+                                ? state.user!.studentName
+                                : "Anonymous",
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'poppins',
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "View profile",
-                            style: TextStyle(
-                              fontFamily: 'poppins',
-                              color: Colors.white.withOpacity(0.5),
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -169,7 +164,11 @@ class DrawerWidget extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context,
+                          AllClassesScreen.id,
+                          arguments: context.read<HomeBloc>(),
+                        );
                       },
                     ),
                     TextButton(

@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aams_fyp/models/attendance.dart';
 import 'package:aams_fyp/models/class.dart';
 import 'package:aams_fyp/models/course.dart';
+import 'package:aams_fyp/models/user.dart';
 import 'package:aams_fyp/services/firebase_service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart' as u;
 import 'package:kt_dart/kt.dart';
 import 'package:meta/meta.dart';
 
@@ -15,14 +18,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   StreamSubscription? authBlocStream;
   StreamSubscription? courseStream;
   StreamSubscription? classStream;
+  StreamSubscription? attendanceStream;
+  StreamSubscription? userStream;
+
   FirebaseService _firebaseService = FirebaseService();
   HomeBloc(AuthBloc authBloc) : super(HomeState.initial()) {
-    authBlocStream = authBloc.stream.listen((authState) {});
+    userStream = _firebaseService.userStream().listen((user) {
+      if (!isClosed) add(AddUser(user));
+    });
+
     courseStream = _firebaseService.getAllCourses().listen((courses) {
-      add(AddCourseList(courses));
+      if (!isClosed) add(AddCourseList(courses));
     });
     classStream = _firebaseService.getAllClasses().listen((classes) {
-      add(AddClassList(classes));
+      if (!isClosed) add(AddClassList(classes));
+    });
+    attendanceStream =
+        _firebaseService.getAllAttendance().listen((attendances) {
+      if (!isClosed) add(AddAttendanceList(attendances));
+    });
+
+    on<AddUser>((event, emit) => emit(state.copyWithUser(user: event.user)));
+
+    on<AddAttendanceList>((event, emit) {
+      emit(state.copyWith(attendances: event.attendance.toImmutableList()));
     });
 
     // write AddClassList event
@@ -40,6 +59,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     authBlocStream?.cancel();
     courseStream?.cancel();
     classStream?.cancel();
+    attendanceStream?.cancel();
     return super.close();
   }
 }

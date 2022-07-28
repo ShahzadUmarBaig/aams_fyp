@@ -48,9 +48,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _apiService.signUpUser(state.email, state.password);
         FirebaseService firebaseService = FirebaseService();
         firebaseService.createUser(
-            studentName: state.studentName,
-            studentId: state.studentId,
-            email: state.email);
+          studentName: state.studentName,
+          studentId: state.studentId,
+          email: state.email,
+        );
         emit(state.copyWith(isLoading: false));
         emit(state.copyWithImage(file: null));
       } on ApiException catch (e) {

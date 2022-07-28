@@ -99,7 +99,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             child: Text(
-                              'Login',
+                              'Add',
                               style: Constants.buttonTextStyle,
                             ),
                           ),
