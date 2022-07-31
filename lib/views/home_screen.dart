@@ -20,6 +20,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
+        print(state.user);
+        print(FirebaseAuth.instance.currentUser?.uid);
         return Scaffold(
           key: _scaffoldKey,
           drawer: DrawerWidget(),
@@ -228,8 +230,8 @@ class CustomContainer extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Container(
-          width: 167,
-          height: 202,
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.height * 0.25,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
             color: Color(colorValue),

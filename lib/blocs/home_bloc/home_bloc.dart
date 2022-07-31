@@ -38,10 +38,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (!isClosed) add(AddAttendanceList(attendances));
     });
 
+    on<OnSearchInputChanged>(
+        (event, emit) => emit(state.copyWith(searchInput: event.searchInput)));
+    on<OnCourseChanged>((event, emit) {
+      emit(state.copyWith(selectedCourse: event.course));
+    });
+
     on<AddUser>((event, emit) => emit(state.copyWithUser(user: event.user)));
 
     on<AddAttendanceList>((event, emit) {
       emit(state.copyWith(attendances: event.attendance.toImmutableList()));
+    });
+
+    on<RefreshClassList>((event, emit) {
+      List<Class> allClasses = state.classes.asList();
+      emit(state.copyWith(classes: <Class>[].toImmutableList()));
+      emit(state.copyWith(classes: allClasses.toImmutableList()));
     });
 
     // write AddClassList event

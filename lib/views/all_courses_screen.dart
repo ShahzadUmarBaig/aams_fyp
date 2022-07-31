@@ -39,7 +39,6 @@ class AllCourseScreen extends StatelessWidget {
                                   subtitle: Text(state.courses
                                       .asList()[index]
                                       .courseInstructor),
-                                  trailing: Icon(Icons.keyboard_arrow_right),
                                 ),
                               ),
                             );

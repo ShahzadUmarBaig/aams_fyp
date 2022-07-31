@@ -5,13 +5,11 @@ import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
 import 'package:aams_fyp/constants.dart';
 import 'package:aams_fyp/models/class.dart';
-import 'package:aams_fyp/services/firebase_service.dart';
 import 'package:aams_fyp/views/add_class_screen.dart';
 import 'package:aams_fyp/widgets/custom_app_bar.dart';
 import 'package:aams_fyp/widgets/image_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AllClassesScreen extends StatelessWidget {
   static const String id = '/all_classes_screen';
@@ -38,6 +36,7 @@ class AllClassesScreen extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (homeContext, state) {
         HomeBloc homeBloc = context.read<HomeBloc>();
+        print(state);
         return SafeArea(
           child: Scaffold(
             body: Container(
@@ -51,11 +50,12 @@ class AllClassesScreen extends StatelessWidget {
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
-                          itemCount: state.classes.iter.length,
+                          itemCount: state.classesFiltered.length,
                           padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.15),
+                              top: MediaQuery.of(context).size.height * 0.16),
                           itemBuilder: (context, index) {
-                            Class classObject = state.classes.asList()[index];
+                            Class classObject = state.classesFiltered[index];
+                            print(state.attendanceAlreadyMarked(classObject));
                             return Container(
                               height: MediaQuery.of(context).size.height * 0.1,
                               width: MediaQuery.of(context).size.width,
@@ -164,7 +164,8 @@ class AllClassesScreen extends StatelessWidget {
                                                       classObject: classObject),
                                                 );
                                               },
-                                            );
+                                            ).then((value) => homeBloc
+                                                .add(RefreshClassList()));
                                           },
                                           color: Constants.buttonColor,
                                           shape: CircleBorder(),
@@ -205,6 +206,7 @@ class AllClassesScreen extends StatelessWidget {
                       },
                     ),
                   ),
+                  Positioned(top: 70, child: SearchField()),
                 ],
               ),
             ),
@@ -330,5 +332,52 @@ class AttendanceSheet extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SearchField extends StatelessWidget {
+  const SearchField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Container(
+          height: 45,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: TextFormField(
+            onChanged: (value) {
+              context.read<HomeBloc>().add(OnSearchInputChanged(value));
+            },
+            decoration: InputDecoration(
+              hoverColor: Colors.white,
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              enabled: true,
+              filled: true,
+              hintText: "Search Classes",
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    // return Container(
+    //   width: MediaQuery.of(context).size.width * 0.92,
+    //   height: 52,
+    //   padding: EdgeInsets.symmetric(horizontal: 18),
+    //   decoration: BoxDecoration(
+    //       color: Colors.white,
+    //       borderRadius: BorderRadius.circular(32),
+    //       boxShadow: [BoxShadow(blurRadius: 0.2, color: Colors.black12)]),
+    //   child: TextFormField(),
+    // );
   }
 }

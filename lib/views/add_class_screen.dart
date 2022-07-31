@@ -34,12 +34,12 @@ class _AddClassScreenState extends State<AddClassScreen> {
 
   bool _isLoading = false;
 
-  bool _isValid() {
+  bool _isValid(HomeState state) {
     return startDate != null &&
         endDate != null &&
         startTime != null &&
         endTime != null &&
-        _classNameController.text.isNotEmpty;
+        state.selectedCourse != null;
   }
 
   @override
@@ -60,7 +60,7 @@ class _AddClassScreenState extends State<AddClassScreen> {
                           Text("No courses found"),
                         if (state.convertedCoursesList.isNotEmpty)
                           DropdownButtonFormField<Course>(
-                            value: state.convertedCoursesList.first,
+                            value: state.selectedCourse,
                             items: state.convertedCoursesList
                                 .map(
                                   (e) => DropdownMenuItem<Course>(
@@ -73,8 +73,8 @@ class _AddClassScreenState extends State<AddClassScreen> {
                               hintText: "Select Course",
                             ),
                             onChanged: (Course? classObject) {
-                              _classNameController.text =
-                                  classObject!.courseName;
+                              BlocProvider.of<HomeBloc>(context)
+                                  .add(OnCourseChanged(classObject!));
                             },
                           ),
                         SizedBox(height: 24),
@@ -208,7 +208,7 @@ class _AddClassScreenState extends State<AddClassScreen> {
                         _isLoading
                             ? Center(child: CircularProgressIndicator())
                             : MaterialButton(
-                                onPressed: _isValid()
+                                onPressed: _isValid(state)
                                     ? () {
                                         setState(() {
                                           _isLoading = true;
@@ -231,7 +231,9 @@ class _AddClassScreenState extends State<AddClassScreen> {
                                         FirebaseService()
                                             .addClass(
                                           duration: duration,
-                                          className: _classNameController.text,
+                                          className: getClassName(state),
+                                          courseName:
+                                              state.selectedCourse!.courseName,
                                           endTime: endDateTime,
                                           startTime: startDateTime,
                                         )
@@ -245,6 +247,7 @@ class _AddClassScreenState extends State<AddClassScreen> {
                                     : null,
                                 color: Constants.buttonColor,
                                 minWidth: double.infinity,
+                                disabledColor: Colors.grey,
                                 height: 45,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
@@ -263,5 +266,13 @@ class _AddClassScreenState extends State<AddClassScreen> {
         },
       ),
     );
+  }
+
+  String getClassName(HomeState state) {
+    return state.selectedCourse!.courseName +
+        " " +
+        "Class" +
+        " " +
+        state.getExistingClasses.length.toString();
   }
 }

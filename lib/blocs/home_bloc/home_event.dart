@@ -22,3 +22,15 @@ class AddUser extends HomeEvent {
   final User user;
   AddUser(this.user);
 }
+
+class OnCourseChanged extends HomeEvent {
+  final Course course;
+  OnCourseChanged(this.course);
+}
+
+class RefreshClassList extends HomeEvent {}
+
+class OnSearchInputChanged extends HomeEvent {
+  final String searchInput;
+  OnSearchInputChanged(this.searchInput);
+}

@@ -11,7 +11,6 @@ class FirebaseService {
     return _singleton;
   }
   FirebaseService._internal();
-  User user = FirebaseAuth.instance.currentUser!;
 
   Future createUser({
     required String studentName,
@@ -22,12 +21,12 @@ class FirebaseService {
       studentId: studentId,
       email: email,
       studentName: studentName,
-      uid: user.uid,
+      uid: FirebaseAuth.instance.currentUser!.uid,
     );
 
     await FirebaseFirestore.instance
         .collection("users")
-        .doc(user.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .set(localUser.toMap());
   }
 
@@ -61,12 +60,14 @@ class FirebaseService {
     required DateTime startTime,
     required DateTime endTime,
     required Duration duration,
+    required String courseName,
   }) async {
     Class classObject = Class(
       className: className,
       startTime: startTime,
       endTime: endTime,
       duration: duration,
+      courseName: courseName,
     );
 
     await FirebaseFirestore.instance
@@ -76,9 +77,10 @@ class FirebaseService {
 
   // create stream that gets all attendance where uid is user.uid
   Stream<List<Attendance>> getAllAttendance() {
+    print(FirebaseAuth.instance.currentUser!.uid);
     return FirebaseFirestore.instance
         .collection("attendance")
-        .where("uid", isEqualTo: user.uid)
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots()
         .map((event) =>
             event.docs.map((e) => Attendance.fromMap(e.data())).toList());
@@ -89,7 +91,7 @@ class FirebaseService {
     required Class classObject,
   }) async {
     await FirebaseFirestore.instance.collection("attendance").add({
-      "uid": user.uid,
+      "uid": FirebaseAuth.instance.currentUser!.uid,
       "classData": classObject.toMap(),
     });
   }
@@ -98,12 +100,10 @@ class FirebaseService {
   Stream<u.User> userStream() {
     return FirebaseFirestore.instance
         .collection("users")
-        .doc(user.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .snapshots()
         .map(
-          (event) => u.User.fromMap(
-            event.data()!,
-          ),
+          (event) => u.User.fromMap(event.data()!),
         );
   }
 }
