@@ -41,7 +41,12 @@ class RouteGenerator {
           ),
         );
       case AddClassScreen.id:
-        return MaterialPageRoute(builder: (context) => AddClassScreen());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider<HomeBloc>.value(
+            value: settings.arguments as HomeBloc,
+            child: AddClassScreen(),
+          ),
+        );
 
       case AddCourseScreen.id:
         return MaterialPageRoute(builder: (context) => AddCourseScreen());

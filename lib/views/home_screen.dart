@@ -113,7 +113,7 @@ class DrawerWidget extends StatelessWidget {
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 32, horizontal: 21),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         width: 65,
@@ -127,22 +127,17 @@ class DrawerWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            state.user != null
-                                ? state.user!.studentName
-                                : "Anonymous",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'poppins',
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        state.user != null
+                            ? state.user!.studentName
+                            : "Anonymous",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'poppins',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       )
                     ],
                   ),

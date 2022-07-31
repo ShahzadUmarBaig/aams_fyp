@@ -64,14 +64,8 @@ class SignUpScreen extends StatelessWidget {
                               )
                             : ImageButton(
                                 icon: Icons.add_a_photo,
-                                onPressed: () async {
-                                  PickedFile? image = await ImagePicker()
-                                      .getImage(source: ImageSource.gallery);
-                                  if (image != null) {
-                                    context
-                                        .read<AuthBloc>()
-                                        .add(OnImagePicked(image));
-                                  }
+                                onPressed: () {
+                                  context.read<AuthBloc>().add(OnImagePicked());
                                 },
                               ),
                       ),

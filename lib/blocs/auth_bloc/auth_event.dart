@@ -3,10 +3,7 @@ part of 'auth_bloc.dart';
 @immutable
 abstract class AuthEvent {}
 
-class OnImagePicked extends AuthEvent {
-  final PickedFile file;
-  OnImagePicked(this.file);
-}
+class OnImagePicked extends AuthEvent {}
 
 class OnEmailChanged extends AuthEvent {
   final String email;

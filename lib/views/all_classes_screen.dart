@@ -37,6 +37,7 @@ class AllClassesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (homeContext, state) {
+        HomeBloc homeBloc = context.read<HomeBloc>();
         return SafeArea(
           child: Scaffold(
             body: Container(
@@ -199,7 +200,8 @@ class AllClassesScreen extends StatelessWidget {
                       name: "Classes",
                       showActions: true,
                       onPressed: () {
-                        Navigator.pushNamed(context, AddClassScreen.id);
+                        Navigator.pushNamed(context, AddClassScreen.id,
+                            arguments: homeBloc);
                       },
                     ),
                   ),
@@ -273,14 +275,8 @@ class AttendanceSheet extends StatelessWidget {
                             right: -25,
                             child: ImageButtonTwo(
                               icon: Icons.add,
-                              onPressed: () async {
-                                PickedFile? image = await ImagePicker()
-                                    .getImage(source: ImageSource.gallery);
-                                if (image != null) {
-                                  context
-                                      .read<AttendanceBloc>()
-                                      .add(AddImage(image));
-                                }
+                              onPressed: () {
+                                context.read<AttendanceBloc>().add(AddImage());
                               },
                             ),
                           ),

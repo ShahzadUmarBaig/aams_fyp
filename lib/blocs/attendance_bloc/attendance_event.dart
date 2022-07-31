@@ -5,10 +5,7 @@ abstract class AttendanceEvent {}
 
 class RemoveImage extends AttendanceEvent {}
 
-class AddImage extends AttendanceEvent {
-  final PickedFile image;
-  AddImage(this.image);
-}
+class AddImage extends AttendanceEvent {}
 
 class OnMarkAttendancePressed extends AttendanceEvent {}
 

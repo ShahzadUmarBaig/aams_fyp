@@ -21,6 +21,10 @@ class HomeState {
     );
   }
 
+  List<Course> get convertedCoursesList {
+    return courses.asList();
+  }
+
   factory HomeState.initial() => HomeState(
         courses: <Course>[].toImmutableList(),
         classes: <Class>[].toImmutableList(),

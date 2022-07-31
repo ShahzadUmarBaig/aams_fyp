@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:aams_fyp/services/api_service.dart';
 import 'package:aams_fyp/services/firebase_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
@@ -21,8 +23,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       add(OnUserChanged(user));
     });
 
-    on<OnImagePicked>(
-        (event, emit) => emit(state.copyWithImage(file: event.file)));
+    on<OnImagePicked>((event, emit) async {
+      PickedFile? image =
+          await ImagePicker().getImage(source: ImageSource.camera);
+
+      if (image != null) {
+        PickedFile compressedFile = PickedFile(
+            (await FlutterNativeImage.compressImage(image.path, quality: 90))
+                .path);
+        emit(state.copyWithImage(file: compressedFile));
+      }
+    });
+
     on<OnRemoveImage>((event, emit) => emit(state.copyWithImage(file: null)));
 
     on<OnEmailChanged>(

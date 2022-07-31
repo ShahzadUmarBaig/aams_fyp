@@ -1,4 +1,6 @@
-class Course {
+import 'package:equatable/equatable.dart';
+
+class Course extends Equatable {
   final int courseClasses;
   final String courseName;
   final String courseInstructor;
@@ -24,4 +26,11 @@ class Course {
       "courseInstructor": courseInstructor,
     };
   }
+
+  @override
+  List<Object?> get props => [
+        courseClasses,
+        courseName,
+        courseInstructor,
+      ];
 }

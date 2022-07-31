@@ -5,6 +5,7 @@ import 'package:aams_fyp/models/class.dart';
 import 'package:aams_fyp/services/api_service.dart';
 import 'package:aams_fyp/services/firebase_service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
@@ -21,8 +22,16 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
       emit(state.copyWithImage(file: null));
     });
 
-    on<AddImage>((event, emit) {
-      emit(state.copyWithImage(file: event.image));
+    on<AddImage>((event, emit) async {
+      PickedFile? image =
+          await ImagePicker().getImage(source: ImageSource.camera);
+
+      if (image != null) {
+        PickedFile compressedFile = PickedFile(
+            (await FlutterNativeImage.compressImage(image.path, quality: 90))
+                .path);
+        emit(state.copyWithImage(file: compressedFile));
+      }
     });
 
     on<OnMarkAttendancePressed>((event, emit) async {

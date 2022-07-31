@@ -47,6 +47,8 @@ class ApiService {
     try {
       File file = File(filePath);
       double fileSize = file.lengthSync() / 1024 / 1024;
+      print("=========== FILE SIZE ===============");
+      print(fileSize);
       if (fileSize > 2) {
         throw ApiException("File size must be smaller than 2MB");
       }
@@ -68,7 +70,6 @@ class ApiService {
       if (response.statusCode == 200) {
         return decodedResponse['response'];
       } else {
-        print("Coming here");
         throw ApiException(decodedResponse['error']);
       }
     } catch (e) {
@@ -82,7 +83,7 @@ class ApiService {
           .createUserWithEmailAndPassword(email: email, password: password);
       return result.user;
     } on FirebaseAuthException catch (e) {
-      throw ApiException(e.code);
+      throw ApiException(e.message ?? e.code);
     }
   }
 
@@ -91,8 +92,8 @@ class ApiService {
       UserCredential result = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       return result.user;
-    } catch (e) {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw ApiException(e.message ?? e.code);
     }
   }
 }
