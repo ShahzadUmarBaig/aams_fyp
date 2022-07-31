@@ -39,7 +39,7 @@ class ApiService {
           'POST',
           Uri.parse(
               'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/register'));
-      request.fields.addAll({'empCode': '$studentID'});
+      request.fields.addAll({'empCode': '${studentID.trim()}'});
       request.files.add(await http.MultipartFile.fromPath('image', filePath));
       request.headers.addAll({
         'Content-Type': 'multipart/form-data',
@@ -76,7 +76,7 @@ class ApiService {
           'POST',
           Uri.parse(
               'http://my-env.eba-mjj9b6wm.us-east-1.elasticbeanstalk.com/verify'));
-      request.fields.addAll({'empCode': '$studentId'});
+      request.fields.addAll({'empCode': '${studentId.trim()}'});
       request.files
           .add(await http.MultipartFile.fromPath('image', '$filePath'));
 

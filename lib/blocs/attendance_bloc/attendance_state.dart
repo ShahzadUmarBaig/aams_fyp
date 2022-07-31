@@ -24,6 +24,7 @@ class AttendanceState {
     bool? isLoading,
     bool? isSuccess,
     ApiException? apiException,
+    HomeState? authState,
   }) =>
       AttendanceState(
         file: file,

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
 import 'package:aams_fyp/models/class.dart';
 import 'package:aams_fyp/models/course.dart';
+import 'package:aams_fyp/models/user.dart';
 import 'package:aams_fyp/services/api_service.dart';
 import 'package:aams_fyp/services/firebase_service.dart';
 import 'package:bloc/bloc.dart';
@@ -17,15 +19,15 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
   ApiService _apiService = ApiService();
   FirebaseService firebaseService = FirebaseService();
 
-  AttendanceBloc(AuthBloc authBloc, Class classObject)
+  AttendanceBloc(User user, Class classObject)
       : super(AttendanceState.initial()) {
     on<RemoveImage>((event, emit) {
       emit(state.copyWithImage(file: null));
     });
 
     on<AddImage>((event, emit) async {
-      PickedFile? image =
-          await ImagePicker().getImage(source: ImageSource.camera);
+      PickedFile? image = await ImagePicker()
+          .getImage(source: ImageSource.camera, imageQuality: 80);
 
       if (image != null) {
         PickedFile compressedFile = PickedFile(
@@ -39,8 +41,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
       emit(state.copyWith(isLoading: true));
       try {
         await _apiService.checkWifiName();
-        await _apiService.verifyUser(
-            authBloc.state.studentId, state.file!.path);
+        await _apiService.verifyUser(user.studentId, state.file!.path);
         await firebaseService.addAttendance(classObject: classObject);
         emit(state.copyWith(isSuccess: true));
       } on ApiException catch (e) {

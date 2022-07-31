@@ -5,6 +5,7 @@ import 'package:aams_fyp/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aams_fyp/blocs/home_bloc/home_bloc.dart';
 import 'package:aams_fyp/constants.dart';
 import 'package:aams_fyp/models/class.dart';
+import 'package:aams_fyp/models/user.dart';
 import 'package:aams_fyp/views/add_class_screen.dart';
 import 'package:aams_fyp/widgets/custom_app_bar.dart';
 import 'package:aams_fyp/widgets/image_buttons.dart';
@@ -224,111 +225,117 @@ class AttendanceSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = context.read<HomeBloc>().state.user!;
+
     return Scaffold(
-      body: BlocProvider<AuthBloc>.value(
-        value: context.read<AuthBloc>(),
-        child: BlocProvider(
-          create: (context) =>
-              AttendanceBloc(context.read<AuthBloc>(), classObject),
-          child: BlocConsumer<AttendanceBloc, AttendanceState>(
-            listener: (context, state) {
-              if (state.isSuccess) {
-                Navigator.pop(context);
-              }
-            },
-            builder: (context, state) {
-              return Container(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          margin: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: state.file != null
-                                  ? FileImage(File(state.file!.path))
-                                  : AssetImage(
-                                          "assets/images/image_placeholder.jpeg")
-                                      as ImageProvider,
-                              fit: BoxFit.fill,
-                            ),
+      body: BlocProvider(
+        create: (context) => AttendanceBloc(user, classObject),
+        child: BlocConsumer<AttendanceBloc, AttendanceState>(
+          listener: (context, state) {
+            if (state.isSuccess) {
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+            return Container(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 150,
+                        width: 150,
+                        margin: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: state.file != null
+                                ? FileImage(File(state.file!.path))
+                                : AssetImage(
+                                        "assets/images/image_placeholder.jpeg")
+                                    as ImageProvider,
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        if (state.file != null)
-                          Positioned(
-                            top: -10,
-                            right: -25,
-                            child: ImageButtonTwo(
-                              icon: Icons.close,
-                              onPressed: () {
-                                context
-                                    .read<AttendanceBloc>()
-                                    .add(RemoveImage());
-                              },
-                            ),
+                      ),
+                      if (state.file != null)
+                        Positioned(
+                          top: -10,
+                          right: -25,
+                          child: ImageButtonTwo(
+                            icon: Icons.close,
+                            onPressed: () {
+                              context.read<AttendanceBloc>().add(RemoveImage());
+                            },
                           ),
-                        if (state.file == null)
-                          Positioned(
-                            top: -10,
-                            right: -25,
-                            child: ImageButtonTwo(
-                              icon: Icons.add,
-                              onPressed: () {
-                                context.read<AttendanceBloc>().add(AddImage());
-                              },
-                            ),
+                        ),
+                      if (state.file == null)
+                        Positioned(
+                          top: -10,
+                          right: -25,
+                          child: ImageButtonTwo(
+                            icon: Icons.add,
+                            onPressed: () {
+                              context.read<AttendanceBloc>().add(AddImage());
+                            },
                           ),
-                      ],
+                        ),
+                    ],
+                  ),
+                  Text(
+                    user.studentId,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: Colors.black,
                     ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Please upload your previously registered image and press the button",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  if (state.apiException != null)
                     Text(
-                      "Please upload your previously registered image and press the button",
-                      textAlign: TextAlign.center,
+                      "FAILED: ${state.apiException!.message}",
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 14,
-                        color: Colors.black,
+                        fontSize: 12,
+                        color: Colors.red,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    if (state.apiException != null)
-                      Text(
-                        "FAILED: ${state.apiException!.message}",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.red,
-                        ),
-                      ),
-                    Spacer(),
-                    state.isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : MaterialButton(
-                            onPressed: state.file == null
-                                ? null
-                                : () => context
-                                    .read<AttendanceBloc>()
-                                    .add(OnMarkAttendancePressed()),
-                            disabledColor: Colors.grey,
-                            color: Constants.buttonColor,
-                            minWidth: double.infinity,
-                            height: 45,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Text(
-                              'Mark Attendance',
-                              style: Constants.buttonTextStyle,
-                            ),
-                          )
-                  ],
-                ),
-              );
-            },
-          ),
+                  Spacer(),
+                  state.isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : MaterialButton(
+                          onPressed: state.file == null
+                              ? null
+                              : () => context
+                                  .read<AttendanceBloc>()
+                                  .add(OnMarkAttendancePressed()),
+                          disabledColor: Colors.grey,
+                          color: Constants.buttonColor,
+                          minWidth: double.infinity,
+                          height: 45,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Mark Attendance',
+                            style: Constants.buttonTextStyle,
+                          ),
+                        )
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
