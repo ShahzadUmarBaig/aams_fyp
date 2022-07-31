@@ -6,6 +6,7 @@ class Class extends Equatable {
   final DateTime startTime;
   final DateTime endTime;
   final Duration duration;
+  final String uid;
 
   Class({
     required this.className,
@@ -13,6 +14,7 @@ class Class extends Equatable {
     required this.startTime,
     required this.endTime,
     required this.duration,
+    required this.uid,
   });
 
   factory Class.fromMap(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class Class extends Equatable {
       startTime: DateTime.parse(json["startTime"]),
       endTime: DateTime.parse(json["endTime"]),
       duration: Duration(milliseconds: json["duration"]),
+      uid: json["uid"],
     );
   }
 
@@ -32,10 +35,11 @@ class Class extends Equatable {
       "startTime": startTime.toIso8601String(),
       "endTime": endTime.toIso8601String(),
       "duration": duration.inMilliseconds,
+      "uid": uid,
     };
   }
 
   @override
   List<Object?> get props =>
-      [className, courseName, startTime, endTime, duration];
+      [className, courseName, startTime, endTime, duration, uid];
 }

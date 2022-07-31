@@ -4,6 +4,7 @@ import 'package:aams_fyp/models/course.dart';
 import 'package:aams_fyp/models/user.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseService {
   static final FirebaseService _singleton = FirebaseService._internal();
@@ -36,8 +37,12 @@ class FirebaseService {
   }
 
   Stream<List<Class>> getAllClasses() {
-    return FirebaseFirestore.instance.collection("classes").snapshots().map(
-        (event) => event.docs.map((e) => Class.fromMap(e.data())).toList());
+    return FirebaseFirestore.instance
+        .collection("classes")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map(
+            (event) => event.docs.map((e) => Class.fromMap(e.data())).toList());
   }
 
   Future addCourse({
@@ -68,6 +73,7 @@ class FirebaseService {
       endTime: endTime,
       duration: duration,
       courseName: courseName,
+      uid: FirebaseAuth.instance.currentUser!.uid,
     );
 
     await FirebaseFirestore.instance
