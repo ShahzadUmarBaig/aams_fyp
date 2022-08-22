@@ -229,7 +229,7 @@ class _AddClassScreenState extends State<AddClassScreen> {
                                         );
 
                                         FirebaseService()
-                                            .addClass(
+                                            .createClass(
                                           duration: duration,
                                           className: getClassName(state),
                                           courseName:

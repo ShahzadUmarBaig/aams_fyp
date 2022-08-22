@@ -31,21 +31,8 @@ class FirebaseService {
         .set(localUser.toMap());
   }
 
-  Stream<List<Course>> getAllCourses() {
-    return FirebaseFirestore.instance.collection("courses").snapshots().map(
-        (event) => event.docs.map((e) => Course.fromMap(e.data())).toList());
-  }
 
-  Stream<List<Class>> getAllClasses() {
-    return FirebaseFirestore.instance
-        .collection("classes")
-        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .map(
-            (event) => event.docs.map((e) => Class.fromMap(e.data())).toList());
-  }
-
-  Future addCourse({
+  Future createCourse({
     required String courseName,
     required String courseInstructor,
     required String courseClasses,
@@ -60,7 +47,7 @@ class FirebaseService {
   }
 
   // create class function
-  Future addClass({
+  Future createClass({
     required String className,
     required DateTime startTime,
     required DateTime endTime,
@@ -81,25 +68,39 @@ class FirebaseService {
         .add(classObject.toMap());
   }
 
-  // create stream that gets all attendance where uid is user.uid
-  Stream<List<Attendance>> getAllAttendance() {
-    print(FirebaseAuth.instance.currentUser!.uid);
-    return FirebaseFirestore.instance
-        .collection("attendance")
-        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .map((event) =>
-            event.docs.map((e) => Attendance.fromMap(e.data())).toList());
-  }
 
   // create attendance based on class object
-  Future addAttendance({
+  Future createAttendance({
     required Class classObject,
   }) async {
     await FirebaseFirestore.instance.collection("attendance").add({
       "uid": FirebaseAuth.instance.currentUser!.uid,
       "classData": classObject.toMap(),
     });
+  }
+
+  Stream<List<Course>> getAllCourses() {
+    return FirebaseFirestore.instance.collection("courses").snapshots().map(
+            (event) => event.docs.map((e) => Course.fromMap(e.data())).toList());
+  }
+
+  Stream<List<Class>> getAllClasses() {
+    return FirebaseFirestore.instance
+        .collection("classes")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map(
+            (event) => event.docs.map((e) => Class.fromMap(e.data())).toList());
+  }
+
+  // create stream that gets all attendance where uid is user.uid
+  Stream<List<Attendance>> getAllAttendance() {
+    return FirebaseFirestore.instance
+        .collection("attendance")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map((event) =>
+            event.docs.map((e) => Attendance.fromMap(e.data())).toList());
   }
 
   //write user stream function

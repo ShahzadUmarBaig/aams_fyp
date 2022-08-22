@@ -80,7 +80,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                                 _isLoading = true;
                               });
                               FirebaseService()
-                                  .addCourse(
+                                  .createCourse(
                                 courseClasses: _courseClasses.text,
                                 courseInstructor:
                                     _courseInstructorController.text,

@@ -42,7 +42,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
       try {
         await _apiService.checkWifiName();
         await _apiService.verifyUser(user.studentId, state.file!.path);
-        await firebaseService.addAttendance(classObject: classObject);
+        await firebaseService.createAttendance(classObject: classObject);
         emit(state.copyWith(isSuccess: true));
       } on ApiException catch (e) {
         emit(state.copyWith(isLoading: false, apiException: e));

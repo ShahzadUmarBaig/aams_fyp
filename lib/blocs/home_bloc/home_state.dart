@@ -18,8 +18,7 @@ class HomeState {
   final String searchInput;
 
   bool attendanceAlreadyMarked(Class classObject) {
-    print(attendances);
-    return attendances.any(
+   return attendances.any(
       (attendance) {
         return attendance.classObject == classObject &&
             attendance.uid == u.FirebaseAuth.instance.currentUser!.uid;

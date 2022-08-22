@@ -18,8 +18,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc() : super(AuthState.initial()) {
     _authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
-      print("========= USER CHANGES==========");
-      print(user);
       add(OnUserChanged(user));
     });
 

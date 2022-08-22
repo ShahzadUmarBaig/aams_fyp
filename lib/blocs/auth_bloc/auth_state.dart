@@ -42,6 +42,7 @@ class AuthState {
         apiException: ApiException(""),
       );
 
+
   bool get isStudentIdValid {
     return studentId.isNotEmpty;
   }
@@ -51,6 +52,7 @@ class AuthState {
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email);
   }
+
 
   bool get isPasswordValid {
     return password.length >= 8 &&

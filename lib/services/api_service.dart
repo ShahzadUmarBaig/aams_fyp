@@ -12,13 +12,13 @@ class ApiService {
 
   Future checkWifiName() async {
     var wifiName = await info.getWifiName(); // FooNetwork
-    var wifiBSSID = await info.getWifiBSSID(); // 11:22:33:44:55:66
-    var wifiIP = await info.getWifiIP(); // 192.168.1.43
-    var wifiIPv6 =
-        await info.getWifiIPv6(); // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-    var wifiSubmask = await info.getWifiSubmask(); // 255.255.255.0
-    var wifiBroadcast = await info.getWifiBroadcast(); // 192.168.1.255
-    var wifiGateway = await info.getWifiGatewayIP(); // 192.168.1.1
+    // var wifiBSSID = await info.getWifiBSSID(); // 11:22:33:44:55:66
+    // var wifiIP = await info.getWifiIP(); // 192.168.1.43
+    // var wifiIPv6 =
+    //     await info.getWifiIPv6(); // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+    // var wifiSubmask = await info.getWifiSubmask(); // 255.255.255.0
+    // var wifiBroadcast = await info.getWifiBroadcast(); // 192.168.1.255
+    // var wifiGateway = await info.getWifiGatewayIP(); // 192.168.1.1
 
     // if (wifiName != "Eduroam") {
     //   throw ApiException("Please connect to Eduroam wifi");
@@ -48,14 +48,10 @@ class ApiService {
       http.StreamedResponse response = await request.send();
       String rawResponse = await response.stream.bytesToString();
       Map decodedResponse = json.decode(rawResponse);
-      print(response.statusCode);
-      print(response.reasonPhrase);
-      print(decodedResponse);
-      print(rawResponse);
       if (response.statusCode == 200) {
         return decodedResponse['response'];
       } else {
-        print("Coming here");
+
         throw ApiException(decodedResponse['error']);
       }
     } catch (e) {
@@ -67,8 +63,6 @@ class ApiService {
     try {
       File file = File(filePath);
       double fileSize = file.lengthSync() / 1024 / 1024;
-      print("=========== FILE SIZE ===============");
-      print(fileSize);
       if (fileSize > 2) {
         throw ApiException("File size must be smaller than 2MB");
       }
@@ -83,11 +77,7 @@ class ApiService {
       http.StreamedResponse response = await request.send();
       String rawResponse = await response.stream.bytesToString();
       Map decodedResponse = json.decode(rawResponse);
-      print(response.statusCode);
-      print(response.reasonPhrase);
-      print(decodedResponse);
-      print(rawResponse);
-      if (response.statusCode == 200) {
+     if (response.statusCode == 200) {
         return decodedResponse['response'];
       } else {
         throw ApiException(decodedResponse['error']);
